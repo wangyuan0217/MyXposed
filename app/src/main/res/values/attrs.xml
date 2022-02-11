@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SettingItemView">
+        <attr name="label_text" format="string" />
+        <attr name="subheading_text" format="string" />
+        <attr name="preferences_key" format="string" />
+        <attr name="contact_view" format="reference" /> />
+    </declare-styleable>
+</resources>

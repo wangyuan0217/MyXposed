@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout style="@style/SettingLabelRelativeLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_text"
+                style="@style/SettingText" />
+
+            <TextView
+                android:id="@+id/tv_subheading"
+                style="@style/SettingSubheading" />
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/sw"
+            style="@style/SettingSwitch"
+            android:clickable="false" />
+
+        <View
+            android:id="@+id/v_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#BDBDBD"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</merge>
+
