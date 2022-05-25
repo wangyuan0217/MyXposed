@@ -1,8 +1,9 @@
 package com.trump.myxposed;
 
 import com.socks.library.KLog;
+import com.trump.myxposed.hook.TestHook;
 import com.trump.myxposed.hook.WeicoHook;
-import com.trump.myxposed.util.XSpUtil;
+import com.trump.myxposed.util.Utils;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -18,8 +19,8 @@ public class XposedInit implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        KLog.d("trump package = " + lpparam.packageName);
-        KLog.d("weico ttt = " + XSpUtil.getIntance().getBoolean(Constant.SpKey.weicoHomeAddButton, false));
+
+        Utils.log("LoadPackage:" + lpparam.packageName);
 
         switch (lpparam.packageName) {
             case "com.trump.sample":
@@ -30,7 +31,11 @@ public class XposedInit implements IXposedHookLoadPackage {
             case Constant.PackageIds.weico:
                 new WeicoHook().handleLoadPackage(lpparam);
                 break;
+            case Constant.PackageIds.qianxun:
+                new TestHook().handleLoadPackage(lpparam);
+                break;
         }
+
 
     }
 

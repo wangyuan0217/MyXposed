@@ -48,4 +48,5 @@ dependencies {
 
     // For developers using AndroidX in their applications
     implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
 }

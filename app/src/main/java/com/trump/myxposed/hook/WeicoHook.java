@@ -4,11 +4,13 @@ import android.view.View;
 
 import com.socks.library.KLog;
 import com.trump.myxposed.Constant;
+import com.trump.myxposed.util.Utils;
 import com.trump.myxposed.util.XSpUtil;
 
 import java.lang.reflect.Field;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -22,8 +24,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class WeicoHook extends AbsHook {
 
     @Override
-    void onHandleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        KLog.d("trump hook in");
+    void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
+        Utils.log("weico hook start");
 
         Class indexFragment;
         try {
@@ -41,6 +43,7 @@ public class WeicoHook extends AbsHook {
                 super.afterHookedMethod(param);
 
                 hideHomeAddButton(param, indexFragment);
+                Utils.log("weico hook success");
             }
         });
     }

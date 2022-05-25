@@ -3,7 +3,11 @@ package com.trump.myxposed.util;
 import android.app.ActivityManager;
 import android.content.Context;
 
+import com.socks.library.KLog;
+
 import java.util.List;
+
+import de.robv.android.xposed.XposedBridge;
 
 /**
  * Author: TRUMP
@@ -23,4 +27,9 @@ public class Utils {
         return "unknown";
     }
 
+    public static void log(String msg) {
+        msg = "TRUMP====> " + msg;
+        KLog.d(msg);
+        XposedBridge.log(msg);
+    }
 }
