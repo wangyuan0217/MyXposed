@@ -36,7 +36,7 @@
             android:value="Trump's Xposed 自用合集" />
         <meta-data
             android:name="xposedminversion"
-            android:value="93" />
+            android:value="89" />
         <!--        <meta-data-->
         <!--            android:name="xposedsharedprefs"-->
         <!--            android:value="true" />-->

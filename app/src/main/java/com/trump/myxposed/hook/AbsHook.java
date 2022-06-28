@@ -30,8 +30,8 @@ abstract class AbsHook {
     }
 
     private void callApplicationCreate(XC_LoadPackage.LoadPackageParam lpparam) {
-        Utils.log("trump callApplicationCreate");
         String packageName = lpparam.packageName;
+        Utils.log("trump callApplicationCreate " + packageName);
         if (isJiagu) {
             try {
                 XposedHelpers.findAndHookMethod("com.stub.StubApp", lpparam.classLoader, "attachBaseContext", Context.class, new XC_MethodHook() {

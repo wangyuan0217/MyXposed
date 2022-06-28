@@ -64,4 +64,22 @@ public class MainActivity extends AppCompatActivity {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
+
+
+    public final boolean test1() {
+        return true;
+    }
+
+    public final boolean test2() {
+        return false;
+    }
+
+    public final int test3() {
+        return 0;
+    }
+
+    public int test4() {
+        return 0;
+    }
+
 }

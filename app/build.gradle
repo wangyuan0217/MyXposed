@@ -15,9 +15,24 @@ android {
 
     }
 
+    signingConfigs {
+        release {
+            storeFile file('../wangyuan.jks')
+            storePassword "wangyuan"
+            keyAlias "wangyuan"
+            keyPassword "wangyuan"
+        }
+    }
+
     buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
