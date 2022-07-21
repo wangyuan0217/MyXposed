@@ -3,6 +3,7 @@ package com.trump.myxposed;
 import android.util.Log;
 
 import com.socks.library.KLog;
+import com.trump.myxposed.hook.StubHook;
 import com.trump.myxposed.hook.TestHook;
 import com.trump.myxposed.hook.WeicoHook;
 import com.trump.myxposed.util.Utils;
@@ -35,8 +36,11 @@ public class XposedInit implements IXposedHookLoadPackage {
             case Constant.PackageIds.weico:
                 new WeicoHook().handleLoadPackage(lpparam);
                 break;
-            case "com.everysing.lysn":
+            case "com.leozihu.dingk64":
                 new TestHook().handleLoadPackage(lpparam);
+                break;
+            case "com.jxedt": //驾校一点通
+                new StubHook().handleLoadPackage(lpparam);
                 break;
         }
 
