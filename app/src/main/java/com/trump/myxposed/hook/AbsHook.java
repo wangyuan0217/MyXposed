@@ -4,16 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.socks.library.KLog;
 import com.trump.myxposed.util.Utils;
 
 import java.util.Map;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -28,32 +27,37 @@ abstract class AbsHook {
     protected Handler handler;
     protected boolean isJiagu;
 
+    /**
+     * 加固厂商特征
+     */
+    private String mJiaGuAppClass;
 
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
-        log("trump handleLoadPackage");
-        callApplicationCreate(lpparam);
+    public void setJiaGuAppClass(String jiaGuAppClass) {
+        mJiaGuAppClass = jiaGuAppClass;
     }
 
-    private void callApplicationCreate(XC_LoadPackage.LoadPackageParam lpparam) {
+    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
+        log("handleLoadPackage");
         String packageName = lpparam.packageName;
-        log("trump callApplicationCreate " + packageName);
-        if (isJiagu) {
+        log("callApplicationCreate " + packageName);
+        if (!TextUtils.isEmpty(mJiaGuAppClass)) {
             try {
-                XposedHelpers.findAndHookMethod("com.stub.StubApp", lpparam.classLoader, "attachBaseContext", Context.class, new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        super.afterHookedMethod(param);
-                        //获取到Context对象，通过这个对象来获取classloader
-                        Context context = (Context) param.args[0];
-                        //获取classloader，之后hook加固后的就使用这个classloader
-                        ClassLoader classLoader = context.getClassLoader();
-                        //已经绕过360加固取得classloader
-                        onHandleLoadPackage(classLoader, lpparam);
-                    }
-                });
+                XposedHelpers.findAndHookMethod(mJiaGuAppClass, lpparam.classLoader,
+                        "attachBaseContext", Context.class, new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                super.afterHookedMethod(param);
+                                //获取到Context对象，通过这个对象来获取classloader
+                                Context context = (Context) param.args[0];
+                                //获取classloader，之后hook加固后的就使用这个classloader
+                                ClassLoader classLoader = context.getClassLoader();
+                                //已经绕过360加固取得classloader
+                                onHandleLoadPackage(classLoader, lpparam);
+                            }
+                        });
             } catch (Throwable t) {
                 t.printStackTrace();
-                log("trump callApplicationCreate jiagu" + t.getMessage());
+                log("callApplicationCreate jiagu e " + t.getMessage());
             }
         } else {
             try {
@@ -73,9 +77,8 @@ abstract class AbsHook {
                 );
             } catch (Throwable t) {
                 t.printStackTrace();
-                log("trump callApplicationCreate " + t.getMessage());
+                log("callApplicationCreate e " + t.getMessage());
             }
-
         }
     }
 

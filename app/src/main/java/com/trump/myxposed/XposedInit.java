@@ -1,8 +1,6 @@
 package com.trump.myxposed;
 
 import com.socks.library.KLog;
-import com.trump.myxposed.hook.StubHook;
-import com.trump.myxposed.hook.TestHook;
 import com.trump.myxposed.hook.WeicoHook;
 import com.trump.myxposed.util.Utils;
 
@@ -22,16 +20,10 @@ public class XposedInit implements IXposedHookLoadPackage {
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
         Utils.log("LoadPackage:" + lpparam.packageName);
         switch (lpparam.packageName) {
-            case "加固app":
-                new StubHook().handleLoadPackage(lpparam);
-                break;
             case Constant.PackageIds.wechat:
                 break;
             case Constant.PackageIds.weico:
                 new WeicoHook().handleLoadPackage(lpparam);
-                break;
-            case "com.leozihu.dingk64":
-                new TestHook().handleLoadPackage(lpparam);
                 break;
         }
     }
