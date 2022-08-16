@@ -1,6 +1,8 @@
 package com.trump.myxposed.hook;
 
-import com.trump.myxposed.util.Utils;
+import android.content.Context;
+
+import com.trump.myxposed.Constant;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -11,26 +13,30 @@ public class TestHook extends AbsHook {
 
     @Override
     void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
-        Utils.log("lysn hook in");
-        try {
-            XposedHelpers.findAndHookMethod("toolancode.FAppProtect", classLoader, "de", java.lang.String.class, new XC_MethodHook() {
-                @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    super.beforeHookedMethod(param);
-                }
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
-                    Utils.log("lysn 参数 " + (String) param.args[0]);
-                    Utils.log("lysn 结果 " + param.getResult());
-                }
-            });
-        } catch (Throwable t) {
-            t.printStackTrace();
-            Utils.log("lysn E " + t.getMessage());
-        }
+
+        log("hook加固示例");
+        XposedHelpers.findAndHookMethod(Constant.StubName.c360, lpparam.classLoader,
+                "attachBaseContext", Context.class, new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        super.afterHookedMethod(param);
+                        ClassLoader classLoader = ((Context) param.args[0]).getClassLoader();
+                        //ClassLoader classLoader = param.getClass().getClassLoader();
+
+                        //hook逻辑
+                        XposedHelpers.findAndHookMethod("类名", classLoader,
+                                "方法名", String.class, String.class,
+
+                                new XC_MethodHook() {
+                                    @Override
+                                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                        super.beforeHookedMethod(param);
+                                        param.setResult(true);
+
+                                    }
+                                });
+                    }
+                });
 
     }
-
-
 }

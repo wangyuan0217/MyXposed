@@ -19,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-
-
     }
 
     public void openOtherAppPage(View view) {
@@ -32,14 +30,6 @@ public class MainActivity extends AppCompatActivity {
         //intent.putExtra("type", "110");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    public void test() {
-        tttt(true);
-    }
-
-    public void tttt(boolean flag) {
-
     }
 
     public void test3(View view) {
