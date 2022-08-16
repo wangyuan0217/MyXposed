@@ -25,7 +25,7 @@ public class WeicoHook extends AbsHook {
 
     @Override
     void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
-        Utils.log("weico hook start");
+        log("weico hook start");
 
         Class indexFragment;
         try {
@@ -43,7 +43,7 @@ public class WeicoHook extends AbsHook {
                 super.afterHookedMethod(param);
 
                 hideHomeAddButton(param, indexFragment);
-                Utils.log("weico hook success");
+                log("weico hook success");
             }
         });
     }

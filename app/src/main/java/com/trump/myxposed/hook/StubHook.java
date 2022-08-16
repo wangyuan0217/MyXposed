@@ -2,8 +2,6 @@ package com.trump.myxposed.hook;
 
 import android.content.Context;
 
-import com.trump.myxposed.util.Utils;
-
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -13,7 +11,7 @@ public class StubHook extends AbsHook {
 
     @Override
     void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
-        Utils.log("StubHook hook in");
+        log("StubHook hook in");
         XposedHelpers.findAndHookMethod("com.stub.StubApp", lpparam.classLoader, "a", Context.class, new XC_MethodHook() {
 
             @Override

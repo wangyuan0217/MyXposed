@@ -25,6 +25,8 @@ public interface Constant {
         String cBangBang = "com.SecShell.SecShell.AW";
         //百度加固
         String cBaiDu = "com.sagittarius.v6.StubApplication";
+        //爱加密加固
+        String cAiJiaMi = "coms.h.e.l.l.S";  // 这里hook 需要采用log.e去打log 不然直接拦截 只有log.e ijm才会放行
         //...
 
     }
