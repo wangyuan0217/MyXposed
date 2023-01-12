@@ -1,2 +1,4 @@
 rootProject.name = "MyXposed"
 include ':app'
+include ':lintjar'
+include ':lintaar'

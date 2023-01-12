@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library'
+    id 'com.android.lint'
+}
+
+//lintOptions {
+//    htmlReport true
+//    htmlOutput file("lint-report.html")
+//    textReport true
+//    absolutePaths false
+//    ignoreTestSources true
+//}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+    manifest {
+        //自定义IssueRegistry
+        attributes('Lint-Registry': 'com.example.lintjar.MyIssueRegistry')
+    }
+}
+
+dependencies {
+    compileOnly "com.android.tools.lint:lint-api:27.2.2"
+    compileOnly "com.android.tools.lint:lint-checks:27.2.2"
+}

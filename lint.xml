@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- Disable the given check in this project -->
+    <issue id="UnusedResources" severity="ignore" />
+    
+    <!-- Disable the given check in this project -->
+    <issue id="HardcodedText" severity="ignore" />
+    
+    <!-- Disable the given check in this project -->
+    <issue id="ApplySharedPref" severity="ignore" />
+    
+    <!-- Disable the given check in this project -->
+    <issue id="OldTargetApi" severity="ignore" />
+    
+    <!-- Disable the given check in this project -->
+    <issue id="GradleDependency" severity="ignore" />
+
+    <!-- Ignore the ObsoleteLayoutParam issue in the specified files -->
+    <issue id="ObsoleteLayoutParam">
+        <ignore path="res/layout/activation.xml" />
+        <ignore path="res/layout-xlarge/activation.xml" />
+    </issue>
+
+    <!-- Ignore the UselessLeaf issue in the specified file -->
+    <issue id="UselessLeaf">
+        <ignore path="res/layout/main.xml" />
+    </issue>
+    
+</lint>

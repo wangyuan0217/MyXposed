@@ -3,6 +3,7 @@ package com.trump.myxposed;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+
+        Log.d("ddd", "测试logd");
+        Log.e("eee", "测试loge");
     }
 
     public void openOtherAppPage(View view) {
