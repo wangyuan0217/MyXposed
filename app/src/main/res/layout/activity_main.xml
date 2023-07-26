@@ -9,7 +9,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="openOtherAppPage"
-        android:text="打开指定app页面" />
+        android:onClick="test"
+        android:text="测试" />
 
 </LinearLayout>

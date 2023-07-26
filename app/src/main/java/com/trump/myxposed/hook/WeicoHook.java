@@ -2,15 +2,9 @@ package com.trump.myxposed.hook;
 
 import android.view.View;
 
-import com.socks.library.KLog;
-import com.trump.myxposed.Constant;
-import com.trump.myxposed.util.Utils;
-import com.trump.myxposed.util.XSpUtil;
-
 import java.lang.reflect.Field;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -52,11 +46,9 @@ public class WeicoHook extends AbsHook {
      * 隐藏首页右下角加号按钮
      */
     private void hideHomeAddButton(XC_MethodHook.MethodHookParam param, Class indexFragment) throws IllegalAccessException {
-        if (XSpUtil.getIntance().getBoolean(Constant.SpKey.weicoHomeAddButton, false)) {
-            Field field = XposedHelpers.findField(indexFragment, "mIndexFab");
-            View view = (View) field.get(param.thisObject);
-            view.setVisibility(View.INVISIBLE);
-        }
+        Field field = XposedHelpers.findField(indexFragment, "mIndexFab");
+        View view = (View) field.get(param.thisObject);
+        view.setVisibility(View.INVISIBLE);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.trump.myxposed;
 
 import com.socks.library.KLog;
+import com.trump.myxposed.hook.VmosProHook;
 import com.trump.myxposed.hook.WeicoHook;
 import com.trump.myxposed.util.Utils;
 
@@ -24,6 +25,9 @@ public class XposedInit implements IXposedHookLoadPackage {
                 break;
             case Constant.PackageIds.weico:
                 new WeicoHook().handleLoadPackage(lpparam);
+                break;
+            case Constant.PackageIds.vmos:
+                new VmosProHook().handleLoadPackage(lpparam);
                 break;
         }
     }
