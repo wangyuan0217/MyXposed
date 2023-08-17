@@ -1,5 +1,20 @@
 # MyXposed
+
 个人自用的Xposed模块
 
-### done
-* 隐藏国际版微博主页面右下角的发布按钮
+## 微博轻享版
+
+* 去除开屏广告
+* 去除时间线广告
+* 强制暗黑模式
+* 去除首页右下角发布按钮
+
+
+## MIUI  [参考noguardpls](https://github.com/Xposed-Modules-Repo/cn.fyyr.noguardpls)
+
+* 阻止GuardProvider的跟踪行为
+* 欺骗Analytics为无网络状态
+
+## todo
+
+* ...

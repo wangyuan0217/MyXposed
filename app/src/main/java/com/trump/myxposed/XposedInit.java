@@ -1,13 +1,21 @@
 package com.trump.myxposed;
 
+import android.content.SharedPreferences;
+
 import com.socks.library.KLog;
+import com.trump.myxposed.hook.MiuiAnalyticsHook;
+import com.trump.myxposed.hook.MiuiGuardHook;
 import com.trump.myxposed.hook.VmosProHook;
 import com.trump.myxposed.hook.WeicoHook;
 import com.trump.myxposed.util.Utils;
+import com.trump.myxposed.util.XSpUtil;
 
+import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
@@ -15,7 +23,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
  * Date:   2022/2/10 0010 14:56
  * Desc:
  */
-public class XposedInit implements IXposedHookLoadPackage {
+public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
@@ -29,35 +37,23 @@ public class XposedInit implements IXposedHookLoadPackage {
             case Constant.PackageIds.vmos:
                 new VmosProHook().handleLoadPackage(lpparam);
                 break;
+            case Constant.PackageIds.miui_guardprovider:
+                new MiuiGuardHook().handleLoadPackage(lpparam);
+                break;
+            case Constant.PackageIds.miui_analytics:
+                new MiuiAnalyticsHook().handleLoadPackage(lpparam);
+                break;
         }
     }
 
-    private void example(XC_LoadPackage.LoadPackageParam lpparam) {
-        KLog.d("trump hook in :" + lpparam.packageName);
-        XposedHelpers.findAndHookMethod("com.trump.home.HomeFragment", lpparam.classLoader,
-                "getText", String.class, new XC_MethodHook() {
+    @Override
+    public void initZygote(StartupParam startupParam) throws Throwable {
 
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        KLog.d("trump hook in beforeHookedMethod");
-                        //第一个参数
-                        String str1 = (String) param.args[0];
-                        KLog.d("trump com.trump.home.HomeFragment.getText() 的入参为：" + str1);
-                        //修改参数
-                        param.args[0] = "samuel";
-                    }
-
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        KLog.d("trump hook in afterHookedMethod");
-
-                        //返回值
-                        String resultStr = (String) param.getResult();
-                        KLog.d("trump com.trump.home.HomeFragment.getText() 的返回值为：" + resultStr);
-
-                        //修改返回值
-                        param.setResult("Hooked2");
-                    }
-                });
     }
+
+    @Override
+    public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
+
+    }
+
 }

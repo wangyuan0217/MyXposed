@@ -6,12 +6,23 @@ public interface Constant {
         String wechat = "com.tencent.mm";
         String weico = "com.weico.international"; //微博国际版
         String vmos = "com.vmos.pro"; //vmos
+
+        String miui_guardprovider = "com.miui.guardprovider";
+
+        String miui_analytics = "com.miui.analytics";
     }
 
     String SpFileName = "MyXposed";
 
+    String activityNameAlias = "com.trump.myxposed.ui.MainActivityAlias";
+
     interface SpKey {
-        String weicoHomeAddButton = "weicoHomeAddButton";
+        String darkMode = "darkMode";
+        String hidePostBtn = "hidePostBtn";
+
+        String swFuckMiuiGuard = "swFuckMiuiGuard";
+
+        String swFuckMiuiAnalytics = "swFuckMiuiAnalytics";
     }
 
     /**
