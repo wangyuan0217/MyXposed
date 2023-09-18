@@ -5,16 +5,17 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
-
 import com.socks.library.KLog;
 import com.trump.myxposed.Constant;
+import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 
 import java.util.List;
 
-import de.robv.android.xposed.XposedBridge;
 
 /**
  * Author: TRUMP
@@ -53,7 +54,8 @@ public class Utils {
         List<ResolveInfo> list;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             list = manager.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY));
-        } else {
+        }
+        else {
             list = manager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
         }
         return !list.isEmpty();
@@ -71,5 +73,36 @@ public class Utils {
         PackageManager manager = activity.getPackageManager();
         int newState = visible ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
         manager.setComponentEnabledSetting(component, newState, PackageManager.DONT_KILL_APP);
+    }
+
+    /**
+     * 利用 Reflection 获取当前的系统 Context-- 只能用在xp环境中
+     */
+    public static Context getSystemContextInXp() {
+        Class<?> activityThreadClass = XposedHelpers.findClass("android.app.ActivityThread", null);
+        Object activityThread = XposedHelpers.callStaticMethod(activityThreadClass, "currentActivityThread");
+        Context context = (Context) XposedHelpers.callMethod(activityThread, "getSystemContext");
+        if (context == null) {
+            log("getSystemContext is null");
+        }
+        return context;
+    }
+
+    /**
+     * 获取包名对应的版本号
+     *
+     * @param packageName
+     * @return
+     */
+    public static String getPackageVersionNameInXp(String packageName) {
+        try {
+            PackageManager packageManager = getSystemContextInXp().getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+            return packageInfo.versionName;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

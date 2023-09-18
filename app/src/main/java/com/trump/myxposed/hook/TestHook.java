@@ -10,7 +10,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class TestHook extends AbsHook {
 
     @Override
-    void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
+    void onHandleLoadPackage(String versionName, ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
         log("TestHook start");
 
         XposedHelpers.findAndHookMethod("com.trump.home.HomeFragment", lpparam.classLoader, "getText", String.class, new XC_MethodHook() {

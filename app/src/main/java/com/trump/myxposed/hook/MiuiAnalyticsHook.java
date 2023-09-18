@@ -13,10 +13,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class MiuiAnalyticsHook extends AbsHook {
 
     @Override
-    void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
+    void onHandleLoadPackage(String versionName, ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
         log("MiuiAnalyticsHook hook start");
         boolean swFuckMiuiAnalytics = XSpUtil.getBoolean(true, Constant.SpKey.swFuckMiuiAnalytics);
-        log("weico hook swFuckMiuiAnalytics = " + swFuckMiuiAnalytics);
+        log("MiuiAnalyticsHook hook swFuckMiuiAnalytics = " + swFuckMiuiAnalytics);
         if (swFuckMiuiAnalytics) {
             int i;
             try {

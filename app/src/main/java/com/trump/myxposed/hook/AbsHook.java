@@ -5,14 +5,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.trump.myxposed.util.Utils;
-
-import java.util.Map;
-
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+
+import java.util.Map;
 
 /**
  * @author: wangpan
@@ -39,17 +37,19 @@ abstract class AbsHook {
                             if (Utils.getProcessName(application).equals(packageName)) {
                                 onMainApplicationCreate(application, classLoader);
                             }
-                            onHandleLoadPackage(classLoader, lpparam);
+                            String verionName = Utils.getPackageVersionNameInXp(packageName);
+                            onHandleLoadPackage(verionName, classLoader, lpparam);
                         }
                     }
             );
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             t.printStackTrace();
             log("callApplicationCreate e " + t.getMessage());
         }
     }
 
-    abstract void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam);
+    abstract void onHandleLoadPackage(String versionName, ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam);
 
     protected void onApplicationCreate(Application application, ClassLoader classLoader) {
 

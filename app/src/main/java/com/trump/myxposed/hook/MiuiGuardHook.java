@@ -13,11 +13,11 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 public class MiuiGuardHook extends AbsHook {
 
     @Override
-    void onHandleLoadPackage(ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
+    void onHandleLoadPackage(String versionName, ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
         log("MiuiGuardHook hook start");
 
         boolean swFuckMiuiGuard = XSpUtil.getBoolean(true, Constant.SpKey.swFuckMiuiGuard);
-        log("weico hook swFuckMiuiGuard = " + swFuckMiuiGuard);
+        log("MiuiGuardHook hook swFuckMiuiGuard = " + swFuckMiuiGuard);
         if (swFuckMiuiGuard) {
             try {
                 XposedHelpers.findAndHookMethod(XposedHelpers.findClass("com.miui.guardprovider.GuardApplication", classLoader), "e", new Object[]{Context.class, new XC_MethodHook() {

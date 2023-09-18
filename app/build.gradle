@@ -10,14 +10,14 @@ android {
         applicationId "com.trump.myxposed"
         minSdkVersion 22
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
 
     }
 
     signingConfigs {
         release {
-            storeFile file('../wangyuan.jks')
+            storeFile file('D:\\Personnal\\wangyuan.jks')
             storePassword "wangyuan"
             keyAlias "wangyuan"
             keyPassword "wangyuan"

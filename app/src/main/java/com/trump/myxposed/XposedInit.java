@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.socks.library.KLog;
 import com.trump.myxposed.hook.MiuiAnalyticsHook;
 import com.trump.myxposed.hook.MiuiGuardHook;
+import com.trump.myxposed.hook.MiuiPersonalAssistantHook;
 import com.trump.myxposed.hook.VmosProHook;
 import com.trump.myxposed.hook.WeicoHook;
 import com.trump.myxposed.util.Utils;
@@ -42,6 +43,9 @@ public class XposedInit implements IXposedHookLoadPackage, IXposedHookZygoteInit
                 break;
             case Constant.PackageIds.miui_analytics:
                 new MiuiAnalyticsHook().handleLoadPackage(lpparam);
+                break;
+            case Constant.PackageIds.miui_personalassistant:
+                new MiuiPersonalAssistantHook().handleLoadPackage(lpparam);
                 break;
         }
     }

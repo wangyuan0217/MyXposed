@@ -10,6 +10,8 @@ public interface Constant {
         String miui_guardprovider = "com.miui.guardprovider";
 
         String miui_analytics = "com.miui.analytics";
+
+        String miui_personalassistant = "com.miui.personalassistant";
     }
 
     String SpFileName = "MyXposed";
