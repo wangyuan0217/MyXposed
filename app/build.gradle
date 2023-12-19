@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     //buildToolsVersion "31.0.0"
 
     defaultConfig {
@@ -38,23 +38,29 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
-    viewBinding {
-        enabled = true
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
     }
 
-    repositories {
-        flatDir { dirs 'libs' }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
 
     implementation 'com.github.zhaokaiqiang.klog:library:1.6.0'
 
@@ -63,5 +69,5 @@ dependencies {
 
     // For developers using AndroidX in their applications
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
