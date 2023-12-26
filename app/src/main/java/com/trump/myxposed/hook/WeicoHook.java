@@ -1,9 +1,15 @@
 package com.trump.myxposed.hook;
 
+import android.app.Activity;
+import android.app.Application;
+import android.graphics.Color;
 import android.view.View;
+
 import com.trump.myxposed.Constant;
 import com.trump.myxposed.util.XSpUtil;
+
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -14,11 +20,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Author: TRUMP
- * Date:   2022/2/11 0011 10:35
+ * Author: LINMP4
+ * Date:   2023/12/26 0011 10:35
  * Desc:   微博国际版
  * Functions :
- * 1.隐藏首页右下角加号按钮
+ * 1.已登录用户直接跳转主界面
+ * 2.后台转前台不跳新界面
+ * 3.默认支持"6.2.6"以后版本
  */
 public class WeicoHook extends AbsHook {
 
@@ -61,6 +69,8 @@ public class WeicoHook extends AbsHook {
 
     private void removeSpalshAd(ClassLoader classLoader) {
         try {
+            });
+
             XposedHelpers.findAndHookMethod("com.weico.international.activity.LogoActivity", classLoader, "doWhatNext", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -77,44 +87,51 @@ public class WeicoHook extends AbsHook {
                     param.args[0] = true;
                 }
             });
-        }
-        catch (Exception e) {
+
+            //劫持整个生命周期，“后台到前台”动作失效，不会跳新界面
+            XposedHelpers.findAndHookMethod("com.weico.international.manager.ProcessMonitor", classLoader, "attach", Application.class, new XC_MethodReplacement() {
+                @Override
+                protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
+                    log("weico hook attach");
+                    return null;
+                }
+            });
+        } catch (Exception e) {
             log("weico hook removeSpalshAd exception = " + e.getMessage());
         }
     }
 
     private void removeTimeLineAd(ClassLoader classLoader) {
         try {
-            if (currFunctionNames != null && currFunctionNames.size() > 0) {
-                XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(0), java.util.Map.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                        param.setResult("");
-                    }
-                });
-            }
+            //6.2.6以后queryUveAdRequest不变
+            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, "queryUveAdRequest$lambda$151", java.util.Map.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    param.setResult("");
+                }
+            });
+
 
             Class Function1 = XposedHelpers.findClass("kotlin.jvm.functions.Function1", classLoader);
-            if (currFunctionNames != null && currFunctionNames.size() > 1) {
-                XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(1), Function1, java.lang.Object.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                        param.setResult("");
-                    }
-                });
-            }
 
-            if (currFunctionNames != null && currFunctionNames.size() > 2) {
-                XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(2), Function1, java.lang.Object.class, new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        super.beforeHookedMethod(param);
-                        param.setResult(new ArrayList<>());
-                    }
-                });
-            }
+            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, "queryUveAdRequest$lambda$152", Function1, java.lang.Object.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    param.setResult("");
+                }
+            });
+
+
+            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, "queryUveAdRequest$lambda$153", Function1, java.lang.Object.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    param.setResult(new ArrayList<>());
+                }
+            });
+
 
             Class Status = XposedHelpers.findClass("com.weico.international.model.sina.Status", classLoader);
             XposedHelpers.findAndHookMethod("com.weico.international.utility.KotlinExtendKt", classLoader, "isWeiboUVEAd", Status, new XC_MethodHook() {
@@ -149,8 +166,7 @@ public class WeicoHook extends AbsHook {
                     String p0 = (String) param.args[0];
                     if ("BOOL_UVE_FEED_AD".equals(p0)) {
                         param.setResult(false);
-                    }
-                    else if (p0.startsWith("BOOL_AD_ACTIVITY_BLOCK_")) {
+                    } else if (p0.startsWith("BOOL_AD_ACTIVITY_BLOCK_")) {
                         param.setResult(true);
                     }
                 }
@@ -164,8 +180,7 @@ public class WeicoHook extends AbsHook {
                     String p0 = (String) param.args[0];
                     if ("ad_interval".equals(p0)) {
                         param.setResult(Integer.MAX_VALUE);
-                    }
-                    else if ("display_ad".equals(p0)) {
+                    } else if ("display_ad".equals(p0)) {
                         param.setResult(0);
                     }
                 }
@@ -178,8 +193,7 @@ public class WeicoHook extends AbsHook {
                     String p0 = (String) param.args[0];
                     if ("ad_interval".equals(p0)) {
                         param.setResult(Integer.MAX_VALUE);
-                    }
-                    else if ("display_ad".equals(p0)) {
+                    } else if ("display_ad".equals(p0)) {
                         param.setResult(0);
                     }
                 }
@@ -217,8 +231,7 @@ public class WeicoHook extends AbsHook {
                     }
                 }
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log("weico hook removeTimeLineAd exception = " + e.getMessage());
         }
     }
@@ -240,8 +253,7 @@ public class WeicoHook extends AbsHook {
                     param.setResult(true);
                 }
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log("weico hook forceDarkMode exception = " + e.getMessage());
         }
     }
@@ -259,8 +271,7 @@ public class WeicoHook extends AbsHook {
             Class indexFragment = null;
             try {
                 indexFragment = classLoader.loadClass("com.weico.international.ui.maintab.MainTabFragment");
-            }
-            catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
             if (indexFragment == null) return;
@@ -274,8 +285,7 @@ public class WeicoHook extends AbsHook {
                     view.setVisibility(View.INVISIBLE);
                 }
             });
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log("weico hook hideIndexPostBtn exception = " + e.getMessage());
         }
     }
