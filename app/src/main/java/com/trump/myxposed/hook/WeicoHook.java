@@ -1,23 +1,21 @@
 package com.trump.myxposed.hook;
 
-import android.app.Activity;
 import android.app.Application;
-import android.graphics.Color;
 import android.view.View;
 
 import com.trump.myxposed.Constant;
 import com.trump.myxposed.util.XSpUtil;
-
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XposedHelpers;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
  * Author: LINMP4
@@ -32,13 +30,13 @@ public class WeicoHook extends AbsHook {
 
     private ArrayList<String> currFunctionNames;
 
-    private static HashMap<String, ArrayList<String>> currFunctionNamesMap = new HashMap<String, ArrayList<String>>() {{
-        put("6.1.7", new ArrayList<String>() {{
+    private static HashMap<String, ArrayList<String>> currFunctionNamesMap = new HashMap<>() {{
+        put("6.1.7", new ArrayList<>() {{
             add("queryUveAdRequest$lambda$156");
             add("queryUveAdRequest$lambda$157");
             add("queryUveAdRequest$lambda$158");
         }});
-        put("6.2.6", new ArrayList<String>() {{
+        put("6.2.6", new ArrayList<>() {{
             add("queryUveAdRequest$lambda$151");
             add("queryUveAdRequest$lambda$152");
             add("queryUveAdRequest$lambda$153");
@@ -48,6 +46,10 @@ public class WeicoHook extends AbsHook {
     @Override
     void onHandleLoadPackage(String versionName, ClassLoader classLoader, XC_LoadPackage.LoadPackageParam lpparam) {
         currFunctionNames = currFunctionNamesMap.get(versionName);
+        if (currFunctionNames == null) {
+            //默认
+            currFunctionNames = currFunctionNamesMap.get("6.2.6");
+        }
         log("WeicoHook hook start version = " + versionName);
 
         removeSpalshAd(classLoader);
@@ -69,8 +71,6 @@ public class WeicoHook extends AbsHook {
 
     private void removeSpalshAd(ClassLoader classLoader) {
         try {
-            });
-
             XposedHelpers.findAndHookMethod("com.weico.international.activity.LogoActivity", classLoader, "doWhatNext", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -104,7 +104,7 @@ public class WeicoHook extends AbsHook {
     private void removeTimeLineAd(ClassLoader classLoader) {
         try {
             //6.2.6以后queryUveAdRequest不变
-            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, "queryUveAdRequest$lambda$151", java.util.Map.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(0), java.util.Map.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -115,7 +115,7 @@ public class WeicoHook extends AbsHook {
 
             Class Function1 = XposedHelpers.findClass("kotlin.jvm.functions.Function1", classLoader);
 
-            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, "queryUveAdRequest$lambda$152", Function1, java.lang.Object.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(1), Function1, java.lang.Object.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
@@ -123,8 +123,7 @@ public class WeicoHook extends AbsHook {
                 }
             });
 
-
-            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, "queryUveAdRequest$lambda$153", Function1, java.lang.Object.class, new XC_MethodHook() {
+            XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(2), Function1, java.lang.Object.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
