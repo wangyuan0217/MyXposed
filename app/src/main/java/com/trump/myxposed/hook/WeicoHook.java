@@ -54,6 +54,8 @@ public class WeicoHook extends AbsHook {
 
         getDownloadAble(classLoader);
 
+        hookVip(classLoader);
+
         boolean flagDarkMode = XSpUtil.getBoolean(true, Constant.SpKey.darkMode);
         log("weico hook flagDarkMode = " + flagDarkMode);
         if (flagDarkMode) {
@@ -64,6 +66,20 @@ public class WeicoHook extends AbsHook {
         log("weico hook hidePostBtn = " + hidePostBtn);
         if (hidePostBtn) {
             hideIndexPostBtn(classLoader);
+        }
+    }
+
+    private void hookVip(ClassLoader classLoader) {
+        try {
+            XposedHelpers.findAndHookMethod("org.mozilla.uniffi.weico.VipInfo", classLoader, "isAtVip", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    param.setResult(Long.parseLong("1"));
+                }
+            });
+        } catch (Exception e) {
+            log("weico hook hookVip exception = " + e.getMessage());
         }
     }
 
