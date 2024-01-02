@@ -21,12 +21,13 @@ import java.util.Set;
 
 /**
  * Author: LINMP4
- * Date:   2023/12/26 0011 10:35
+ * Date:   2023/12/27 0011 10:35
  * Desc:   微博国际版
  * Functions :
  * 1.已登录用户直接跳转主界面
  * 2.后台转前台不跳新界面
  * 3.默认支持"6.2.6"以后版本
+ * 4.微博视频允许下载
  */
 public class WeicoHook extends AbsHook {
 
@@ -54,6 +55,10 @@ public class WeicoHook extends AbsHook {
 
         removeTimeLineAd(classLoader);
 
+        getDownloadAble(classLoader);
+
+        hookVip(classLoader);
+
         boolean flagDarkMode = XSpUtil.getBoolean(true, Constant.SpKey.darkMode);
         log("weico hook flagDarkMode = " + flagDarkMode);
         if (flagDarkMode) {
@@ -67,8 +72,45 @@ public class WeicoHook extends AbsHook {
         }
     }
 
+    private void hookVip(ClassLoader classLoader) {
+        try {
+            XposedHelpers.findAndHookMethod("org.mozilla.uniffi.weico.VipInfo", classLoader, "isAtVip", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    param.setResult(Long.parseLong("1"));
+                }
+            });
+        } catch (Exception e) {
+            log("weico hook hookVip exception = " + e.getMessage());
+        }
+    }
+
+    private void getDownloadAble(ClassLoader classLoader) {
+        try {
+            XposedHelpers.findAndHookMethod("com.weico.international.data.VideoModalOTO", classLoader, "getDownloadAble", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    param.setResult(true);
+                }
+            });
+        } catch (Exception e) {
+            log("weico hook getDownloadAble exception = " + e.getMessage());
+        }
+    }
+
     private void removeSpalshAd(ClassLoader classLoader) {
         try {
+            //劫持oncreate直接转入主界面，未登录需要先登录
+            XposedHelpers.findAndHookMethod("com.weico.international.activity.LogoActivity", classLoader, "onCreate", android.os.Bundle.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    final Activity mActivity = (Activity) param.thisObject;
+                    //mActivity.getWindow().getDecorView().setBackgroundColor(Color.parseColor("#1c1c1e"));
+                    XposedHelpers.callMethod(param.thisObject, "initMainTabActivity");
+                }
             });
 
             XposedHelpers.findAndHookMethod("com.weico.international.activity.LogoActivity", classLoader, "doWhatNext", new XC_MethodHook() {
