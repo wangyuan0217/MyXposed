@@ -24,7 +24,10 @@ import java.util.Set;
  * Date:   2023/12/27 0011 10:35
  * Desc:   微博国际版
  * Functions :
- * 1.微博视频允许下载
+ * 1.已登录用户直接跳转主界面
+ * 2.后台转前台不跳新界面
+ * 3.默认支持"6.2.6"以后版本
+ * 4.微博视频允许下载
  */
 public class WeicoHook extends AbsHook {
 
