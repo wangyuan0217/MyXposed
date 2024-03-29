@@ -18,13 +18,11 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
- * Author: LINMP4
- * Date:   2023/12/26 0011 10:35
  * Desc:   微博国际版
  * Functions :
- * 1.已登录用户直接跳转主界面
- * 2.后台转前台不跳新界面
- * 3.默认支持"6.2.6"以后版本
+ * 1.去除开屏广告
+ * 2.强制暗黑模式
+ * 3.去除时间线广告-支持6.1.7  6.2.6  6.3.8
  */
 public class WeicoHook extends AbsHook {
 
@@ -41,6 +39,11 @@ public class WeicoHook extends AbsHook {
             add("queryUveAdRequest$lambda$152");
             add("queryUveAdRequest$lambda$153");
         }});
+        put("6.3.8", new ArrayList<>() {{
+            add("queryUveAdRequest$lambda$159");
+            add("queryUveAdRequest$lambda$160");
+            add("queryUveAdRequest$lambda$161");
+        }});
     }};
 
     @Override
@@ -54,8 +57,6 @@ public class WeicoHook extends AbsHook {
 
         removeSpalshAd(classLoader);
 
-        removeTimeLineAd(classLoader);
-
         boolean flagDarkMode = XSpUtil.getBoolean(true, Constant.SpKey.darkMode);
         log("weico hook flagDarkMode = " + flagDarkMode);
         if (flagDarkMode) {
@@ -67,6 +68,8 @@ public class WeicoHook extends AbsHook {
         if (hidePostBtn) {
             hideIndexPostBtn(classLoader);
         }
+
+        removeTimeLineAd(classLoader);
     }
 
     private void removeSpalshAd(ClassLoader classLoader) {
@@ -103,7 +106,6 @@ public class WeicoHook extends AbsHook {
 
     private void removeTimeLineAd(ClassLoader classLoader) {
         try {
-            //6.2.6以后queryUveAdRequest不变
             XposedHelpers.findAndHookMethod("com.weico.international.api.RxApiKt", classLoader, currFunctionNames.get(0), java.util.Map.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
